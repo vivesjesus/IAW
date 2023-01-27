@@ -142,9 +142,9 @@ Si la ruta de la petición HTTP no corresponde con ninguna que hayamos indicado 
 <span class="linenos" data-linenos=" 3 "></span>@app.route(&quot;/hello/&lt;string:nombre&gt;/&lt;int:edad&gt;&quot;)
 <span class="linenos" data-linenos=" 4 "></span>def hola(nombre=None,edad=None):
 <span class="linenos" data-linenos=" 5 "></span>    if nombre and edad:
-<span class="linenos" data-linenos=" 6 "></span>        return &#39;Hola, {nombre} tienes {edad} años.&#39;
+<span class="linenos" data-linenos=" 6 "></span>        return f&#39;Hola, {nombre} tienes {edad} años.&#39;
 <span class="linenos" data-linenos=" 7 "></span>    elif nombre:
-<span class="linenos" data-linenos=" 8 "></span>        return &#39;Hola, {nombre}&#39;.format(nombre)
+<span class="linenos" data-linenos=" 8 "></span>        return f&#39;Hola, {nombre}&#39;
 <span class="linenos" data-linenos=" 9 "></span>    else:
 <span class="linenos" data-linenos="10 "></span>        return &#39;Hola mundo&#39;
 <span class="linenos" data-linenos="11 "></span>
