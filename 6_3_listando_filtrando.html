@@ -88,47 +88,41 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
     <h1 id="listando-y-filtrando-los-registros-de-la-base-de-datos">Listando y filtrando los registros de la base de datos<a class="headerlink" href="#listando-y-filtrando-los-registros-de-la-base-de-datos" title="Permanent link">&para;</a></h1>
 <p>En esta unidad vamos a seguir trabando en nuestro proyecto, vamos a listar los artículos y las categorías. Además vamos a poder seleccionar los artículos por categoría.</p>
 <h2 id="seleccionando-registros-en-el-programa-principal">Seleccionando registros en el programa principal<a class="headerlink" href="#seleccionando-registros-en-el-programa-principal" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/&#39;)
-<span class="linenos" data-linenos=" 2 "></span>@app.route(&#39;/categoria/&lt;id&gt;&#39;)
-<span class="linenos" data-linenos=" 3 "></span>def inicio(id=&#39;0&#39;):
-<span class="linenos" data-linenos=" 4 "></span>    categoria=Categorias.query.get(id)
-<span class="linenos" data-linenos=" 5 "></span>    if id==&#39;0&#39;:
-<span class="linenos" data-linenos=" 6 "></span>        articulos=Articulos.query.all()
-<span class="linenos" data-linenos=" 7 "></span>    else:
-<span class="linenos" data-linenos=" 8 "></span>        articulos=Articulos.query.filter_by(CategoriaId=id)
-<span class="linenos" data-linenos=" 9 "></span>    categorias=Categorias.query.all()
-<span class="linenos" data-linenos="10 "></span>    return render_template(&quot;inicio.html&quot;,articulos=articulos,categorias=categorias,categoria=categoria)
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>from aplicacion.models import *
+<span class="linenos" data-linenos=" 2 "></span>
+<span class="linenos" data-linenos=" 3 "></span>@app.route(&#39;/&#39;)
+<span class="linenos" data-linenos=" 4 "></span>@app.route(&#39;/categoria/&lt;id&gt;&#39;)
+<span class="linenos" data-linenos=" 5 "></span>def inicio(id=&#39;0&#39;):
+<span class="linenos" data-linenos=" 6 "></span>    categoria=Categorias.query.get(id)
+<span class="linenos" data-linenos=" 7 "></span>    if id==&#39;0&#39;:
+<span class="linenos" data-linenos=" 8 "></span>        articulos=Articulos.query.all()
+<span class="linenos" data-linenos=" 9 "></span>    else:
+<span class="linenos" data-linenos="10 "></span>        articulos=Articulos.query.filter_by(CategoriaId=id)
+<span class="linenos" data-linenos="11 "></span>    categorias=Categorias.query.all()
+<span class="linenos" data-linenos="12 "></span>    return render_template(&quot;inicio.html&quot;,articulos=articulos,categorias=categorias,categoria=categoria)
 </code></pre></div>
-<p>Ejecutamos esta función cuando accedemos a la página (ruta <code>/</code>) o cuando hemos seleccionado una determinada categoria (ruta <code>categorida/&lt;id&gt;</code>):</p>
+<p>Ejecutamos esta función cuando accedemos a la página (ruta <code>/</code>) o cuando hemos seleccionado una determinada categoria (ruta <code>categoria/&lt;id&gt;</code>):</p>
 <ul>
 <li>Si accedemos a la página (ruta <code>/</code>) el identificado de la categoría será por defecto el 0, que corresponde a la categoría <code>Todos</code>. En este caso se seleccionaran todos los artículos.</li>
 <li>Si accedemos a la página seleccionando una categoría, se mandará el identificador de la categoría y se seleccionarán los videojuegos que tienen dicha categoría.</li>
 </ul>
 <p>En los dos casos se muestra una plantilla donde se muestran todas las categorías y los artículos seleccionados.</p>
-<p>Consideramos que la categoría 0:'Todos', debe existir al crear las tablas por lo tanto hemos modificado el fichero <code>manage.py</code> para crearla:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@manager.command
-<span class="linenos" data-linenos="2 "></span>def create_tables():
-<span class="linenos" data-linenos="3 "></span>    &quot;Create relational database tables.&quot;
-<span class="linenos" data-linenos="4 "></span>    db.create_all()
-<span class="linenos" data-linenos="5 "></span>    categoria=Categorias(id=0,nombre=&quot;Todos&quot;)
-<span class="linenos" data-linenos="6 "></span>    db.session.add(categoria)
-<span class="linenos" data-linenos="7 "></span>    db.session.commit()
-</code></pre></div>
+<p>Consideramos que la categoría 0:'Todos', debe existir al crear las tablas por lo tanto la añadimos a la base de datos con nuestro cliente mysql preferido.</p>
 <h2 id="plantilla-para-mostrar-el-listado-iniciohtml">Plantilla para mostrar el listado: <code>inicio.html</code><a class="headerlink" href="#plantilla-para-mostrar-el-listado-iniciohtml" title="Permanent link">&para;</a></h2>
 <p>Podemos diferenciar dos partes:</p>
 <ol>
-<li>
-<p>En primer lugar mostramos las categorías, como hemos enviado el nombre de la categoría seleccionada, podemos señalar la categoría por medio del CSS.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>{% for cat in categorias %}
-<span class="linenos" data-linenos="2 "></span>  {% if categoria.nombre==cat.nombre%}
-<span class="linenos" data-linenos="3 "></span>    &lt;a class=&quot;list-group-item active&quot; href=&quot;{{url_for(&quot;inicio&quot;,id=cat.id)}}&quot;&gt;{{cat.nombre}}&lt;/a&gt;
-<span class="linenos" data-linenos="4 "></span>  {% else %}
-<span class="linenos" data-linenos="5 "></span>    &lt;a class=&quot;list-group-item&quot; href=&quot;{{url_for(&quot;inicio&quot;,id=cat.id)}}&quot;&gt;{{cat.nombre}}&lt;/a&gt;
-<span class="linenos" data-linenos="6 "></span>  {% endif%}
-<span class="linenos" data-linenos="7 "></span>{% endfor %}
+<li>En primer lugar mostramos las categorías, como hemos enviado el nombre de la categoría seleccionada, podemos señalar la categoría por medio del CSS.</li>
+</ol>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>        {% for cat in categorias %}
+<span class="linenos" data-linenos="2 "></span>          {% if categoria.nombre==cat.nombre%}
+<span class="linenos" data-linenos="3 "></span>            &lt;a class=&quot;list-group-item active&quot; href=&quot;{{url_for(&quot;inicio&quot;,id=cat.id)}}&quot;&gt;{{cat.nombre}}&lt;/a&gt;
+<span class="linenos" data-linenos="4 "></span>          {% else %}
+<span class="linenos" data-linenos="5 "></span>            &lt;a class=&quot;list-group-item&quot; href=&quot;{{url_for(&quot;inicio&quot;,id=cat.id)}}&quot;&gt;{{cat.nombre}}&lt;/a&gt;
+<span class="linenos" data-linenos="6 "></span>          {% endif%}
+<span class="linenos" data-linenos="7 "></span>        {% endfor %}
 </code></pre></div>
-<p>Podemos seleccionar una categoría para filtrar los artículos.</p>
-</li>
+    Podemos seleccionar una categoría para filtrar los artículos.</p>
+<ol start="2">
 <li>
 <p>Mostramos los artículos seleccionados:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>{% for art in articulos %}  
@@ -153,13 +147,13 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <p>Hemos creado una página donde vamos a mostrar todas las categorías, para ello hemos incluido en enlace en la plantilla <code>base.html</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;a class=&quot;navbar-brand&quot; href=&quot;{{url_for(&#39;categorias&#39;)}}&quot;&gt;Categorías&lt;/a&gt;
 </code></pre></div>
-<p>En el programa principal:</p>
+<p>Finalmente añadimos en el programa principal:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/categorias&#39;)
 <span class="linenos" data-linenos="2 "></span>def categorias():
 <span class="linenos" data-linenos="3 "></span>    categorias=Categorias.query.all()
 <span class="linenos" data-linenos="4 "></span>    return render_template(&quot;categorias.html&quot;,categorias=categorias)
 </code></pre></div>
-<p>Y la plantilla <code>categorias.html</code>:</p>
+<p>Y creamos la plantilla <code>categorias.html</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>...
 <span class="linenos" data-linenos="2 "></span>{% for cat in categorias %}
 <span class="linenos" data-linenos="3 "></span>    &lt;tr&gt;
@@ -169,7 +163,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <span class="linenos" data-linenos="7 "></span>...
 </code></pre></div>
 <h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
-<p><a href="../../ejemplos/u23">Código</a></p>
+<p><a href="zip/codigo_6_3.zip">Código</a></p>
 
   <br>
     

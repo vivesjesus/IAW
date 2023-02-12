@@ -129,14 +129,16 @@ A continuación necesitamos configurar algunos parámetros para configurar nuest
 <hr />
 <p>Todos los parámetros de configuración de la aplicación que necesitemos los vamos a guardar en un nuevo fichero (config.py) que guardaremos en el directorio aplicacion, con la configuración de Flask-sqlalchemy quedaría de la siguiente manera:</p>
 <h5 id="configpy"><strong>config.py</strong><a class="headerlink" href="#configpy" title="Permanent link">&para;</a></h5>
-<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>import os   
-<span class="linenos" data-linenos="2 "></span>secret_key = &#39;A0Zr98j/3yX R~XHH!jmN]LWX/,?RT&#39;
-<span class="linenos" data-linenos="3 "></span>PWD = os.path.abspath(os.curdir)    
-<span class="linenos" data-linenos="4 "></span>DEBUG = True
-<span class="linenos" data-linenos="5 "></span>SQLALCHEMY_DATABASE_URI = &#39;sqlite:///{}/dbase.db&#39;.format(PWD)
-<span class="linenos" data-linenos="6 "></span># con mysql, SQLALCHEMY_DATABASE_URI=mysql://username:password@server/db
-<span class="linenos" data-linenos="7 "></span># SQLALCHEMY_DATABASE_URI = mysql://root:&quot;&quot;@localhost/db
-<span class="linenos" data-linenos="8 "></span>SQLALCHEMY_TRACK_MODIFICATIONS = False
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>import os   
+<span class="linenos" data-linenos=" 2 "></span>secret_key = &#39;A0Zr98j/3yX R~XHH!jmN]LWX/,?RT&#39;
+<span class="linenos" data-linenos=" 3 "></span>PWD = os.path.abspath(os.curdir)    
+<span class="linenos" data-linenos=" 4 "></span>DEBUG = True
+<span class="linenos" data-linenos=" 5 "></span>#Ejemplo con base de datos sqlite
+<span class="linenos" data-linenos=" 6 "></span>#SQLALCHEMY_DATABASE_URI = &#39;sqlite:///{}/dbase.db&#39;.format(PWD)
+<span class="linenos" data-linenos=" 7 "></span># con mysql, SQLALCHEMY_DATABASE_URI=&#39;mysql://username:password@server/db&#39;
+<span class="linenos" data-linenos=" 8 "></span>SQLALCHEMY_DATABASE_URI = &#39;mysql://root:&quot;&quot;@localhost/flask_db&#39;
+<span class="linenos" data-linenos=" 9 "></span>
+<span class="linenos" data-linenos="10 "></span>SQLALCHEMY_TRACK_MODIFICATIONS = False
 </code></pre></div>
 - secret_key: Ya la habíamos usado anteriormente, nos permite cifrar los tokens para el mecanismo de seguridad CSRF de los fomularios.
 - SQLALCHEMY_DATABASE_URI: Indicamos la cadena de conexión a la base de datos. En este caso vamos a utilizar una base de datos sqlite3. Podríamos tener varias variables para configurar las conexiones de base de datos en los entornos de desarrollo, prueba y producción.

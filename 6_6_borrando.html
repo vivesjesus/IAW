@@ -93,7 +93,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <p>Vamos a modificar nuestro modelo de datos, para indicar que vamos a borrar en cascada en nuestra relación, es decir al borrar una categoría vamos a borrar todos los videojuegos de esa categoría, para ello en el fichero <code>models.py</code> cambiamos la siguiente línea en el modelo <code>Categorias</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>articulos = relationship(&quot;Articulos&quot;, cascade=&quot;all, delete-orphan&quot;, backref=&quot;Categorias&quot;,lazy=&#39;dynamic&#39;)
 </code></pre></div>
-<p>Tenemos que volver a generar la base de datos para que tenga efecto este cambio.</p>
+<p>Tenemos que volver a generar la base de datos para que tenga efecto este cambio. O mejor, cojamos nuestro cliente de mysql y cambiemos el tipo de acción por defecto ante borrado en la clave ajena de Articulos que apunta a Categorías.</p>
 <h2 id="borrando-articulos">Borrando artículos<a class="headerlink" href="#borrando-articulos" title="Permanent link">&para;</a></h2>
 <p>Lo primero es insertar un enlace en la página principal que nos permita borrar artículos (se añade un enlace por cada artículo), para ello en la plantilla <code>inicio.html</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;td&gt;&lt;a href=&quot;{{url_for(&#39;articulos_delete&#39;,id=art.id)}}&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-trash&quot;&gt;&lt;/span&gt; Borrar&lt;/a&gt;&lt;/td&gt;
@@ -117,8 +117,8 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li>
 <p>Lo primero que hacemos es seleccionar el artículo según el identificador recibido en la ruta, sino existe el artículo devolvemos un error:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>art=Articulos.query.get(id)
-<span class="linenos" data-linenos="2 "></span>    if art is None:
-<span class="linenos" data-linenos="3 "></span>        abort(404)
+<span class="linenos" data-linenos="2 "></span>if art is None:
+<span class="linenos" data-linenos="3 "></span>    abort(404)
 </code></pre></div>
 </li>
 <li>
@@ -141,10 +141,48 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 </ul>
 </li>
 </ul>
+<p>Veamos el código completo:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/articulos/&lt;id&gt;/delete&#39;, methods=[&quot;get&quot;, &quot;post&quot;])
+<span class="linenos" data-linenos=" 2 "></span>def articulos_delete(id):
+<span class="linenos" data-linenos=" 3 "></span>    from aplicacion.models import Articulos
+<span class="linenos" data-linenos=" 4 "></span>    art = Articulos.query.get(id)
+<span class="linenos" data-linenos=" 5 "></span>    if art is None:
+<span class="linenos" data-linenos=" 6 "></span>        abort(404)
+<span class="linenos" data-linenos=" 7 "></span>    form = FormSINO()
+<span class="linenos" data-linenos=" 8 "></span>    if form.validate_on_submit():
+<span class="linenos" data-linenos=" 9 "></span>        if form.si.data:
+<span class="linenos" data-linenos="10 "></span>            if art.image != &quot;&quot; and art.image!=None:
+<span class="linenos" data-linenos="11 "></span>                os.remove(app.root_path + &quot;/static/upload/&quot; + art.image)
+<span class="linenos" data-linenos="12 "></span>            db.session.delete(art)
+<span class="linenos" data-linenos="13 "></span>            db.session.commit()
+<span class="linenos" data-linenos="14 "></span>        return redirect(url_for(&quot;inicio&quot;))
+<span class="linenos" data-linenos="15 "></span>    return render_template(&quot;articulos_delete.html&quot;, form=form, art=art)
+</code></pre></div></p>
+<p>Por cierto el código del template <code>articulos_delete.html</code> es el siguiente:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>{% extends &quot;base.html&quot; %}
+<span class="linenos" data-linenos=" 2 "></span>{% block title %}Tienda de Videojuegos{% endblock %}
+<span class="linenos" data-linenos=" 3 "></span>{% block contenido %}
+<span class="linenos" data-linenos=" 4 "></span>&lt;div class=&quot;container&quot;&gt;
+<span class="linenos" data-linenos=" 5 "></span>  &lt;div class=&quot;row&quot;&gt;
+<span class="linenos" data-linenos=" 6 "></span>    &lt;h3&gt;Borrar Videojuego&lt;/h3&gt;  
+<span class="linenos" data-linenos=" 7 "></span>    &lt;p&gt;¿Estás seguro de borrar el videojuego: {{art.nombre}}&lt;/p&gt;
+<span class="linenos" data-linenos=" 8 "></span>      &lt;form class=&quot;form-horizontal&quot;  method=&quot;post&quot;&gt;
+<span class="linenos" data-linenos=" 9 "></span>        &lt;div class=&quot;form-group&quot;&gt;
+<span class="linenos" data-linenos="10 "></span>          {{ form.csrf_token }}
+<span class="linenos" data-linenos="11 "></span>          {{form.si(class=&quot;btn btn-primary&quot;) }} {{form.no(class=&quot;btn btn-primary&quot;)}}&lt;br/&gt;&lt;br/&gt;
+<span class="linenos" data-linenos="12 "></span>        &lt;/div&gt;
+<span class="linenos" data-linenos="13 "></span>
+<span class="linenos" data-linenos="14 "></span>    &lt;/form&gt;
+<span class="linenos" data-linenos="15 "></span>  &lt;/div&gt;
+<span class="linenos" data-linenos="16 "></span>&lt;/div&gt;
+<span class="linenos" data-linenos="17 "></span>
+<span class="linenos" data-linenos="18 "></span>
+<span class="linenos" data-linenos="19 "></span>{% endblock %}
+</code></pre></div></p>
 <h2 id="borrando-categorias">Borrando categorías<a class="headerlink" href="#borrando-categorias" title="Permanent link">&para;</a></h2>
 <p>De una forma similar puedes estudiar el código para ver cómo se borran las categorías en nuestra base de datos. Comprueba que al borrar una categoría se borran todos los videojuegos asociados.</p>
 <h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
-<p><a href="../../ejemplos/u26">Código</a></p>
+<p><a href="zip/codigo_6_6.zip">Código</a></p>
 
   <br>
     

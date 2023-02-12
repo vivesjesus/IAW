@@ -92,7 +92,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 </code></pre></div>
 <ul>
 <li>Vamos a usar el mismo formulario (<code>formArticulo</code>) que hemos utilizado en la unidad anterior para añadir nuevos artículos, para realizar la modificación.</li>
-<li>Vamos a utilizar el mismo template <code>articulos_new.html</code> para mostrar el formulario.</li>
+<li>Vamos a copiar el template <code>articulos_new.html</code> y lo pegamos en un nuevo fichero denominado <code>articulos_edit.html</code> para mostrar el formulario.</li>
 <li>
 <p>En el programa principal, vamos a crear una ruta dinámica, que nos permite modificar un registro según su identificador:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/articulos/&lt;id&gt;/edit&#39;, methods=[&quot;get&quot;,&quot;post&quot;])
@@ -101,8 +101,8 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li>
 <p>Lo primero que hacemos es seleccionar el artículo según el identificador recibido en la ruta, sino existe el artículo devolvemos un error:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>art=Articulos.query.get(id)
-<span class="linenos" data-linenos="2 "></span>    if art is None:
-<span class="linenos" data-linenos="3 "></span>        abort(404)
+<span class="linenos" data-linenos="2 "></span>if art is None:
+<span class="linenos" data-linenos="3 "></span>    abort(404)
 </code></pre></div>
 </li>
 <li>
@@ -112,24 +112,34 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 </li>
 <li>
 <p>Si el formulario es válido:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>...
-<span class="linenos" data-linenos=" 2 "></span>if form.validate_on_submit():
-<span class="linenos" data-linenos=" 3 "></span>    #Borramos la imagen anterior
-<span class="linenos" data-linenos=" 4 "></span>    if  form.photo.data:
-<span class="linenos" data-linenos=" 5 "></span>        os.remove(app.root_path+&quot;/static/upload/&quot;+art.image)
-<span class="linenos" data-linenos=" 6 "></span>        try:
-<span class="linenos" data-linenos=" 7 "></span>            f = form.photo.data
-<span class="linenos" data-linenos=" 8 "></span>            nombre_fichero=secure_filename(f.filename)
-<span class="linenos" data-linenos=" 9 "></span>            f.save(app.root_path+&quot;/static/upload/&quot;+nombre_fichero)
-<span class="linenos" data-linenos="10 "></span>        except:
-<span class="linenos" data-linenos="11 "></span>            nombre_fichero=&quot;&quot;
-<span class="linenos" data-linenos="12 "></span>    else:
-<span class="linenos" data-linenos="13 "></span>        nombre_fichero=art.image
-<span class="linenos" data-linenos="14 "></span>
-<span class="linenos" data-linenos="15 "></span>    form.populate_obj(art)
-<span class="linenos" data-linenos="16 "></span>    art.image=nombre_fichero
-<span class="linenos" data-linenos="17 "></span>    db.session.commit()
-<span class="linenos" data-linenos="18 "></span>    return redirect(url_for(&quot;inicio&quot;))
+</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/articulos/&lt;id&gt;/edit&#39;, methods=[&quot;get&quot;, &quot;post&quot;])
+<span class="linenos" data-linenos=" 2 "></span>def articulos_edit(id):
+<span class="linenos" data-linenos=" 3 "></span>    from aplicacion.models import Articulos, Categorias
+<span class="linenos" data-linenos=" 4 "></span>    art = Articulos.query.get(id)
+<span class="linenos" data-linenos=" 5 "></span>    if art is None:
+<span class="linenos" data-linenos=" 6 "></span>        abort(404)
+<span class="linenos" data-linenos=" 7 "></span>    form = formArticulo(obj=art)
+<span class="linenos" data-linenos=" 8 "></span>    categorias = [(c.id, c.nombre) for c in Categorias.query.all()[1:]]
+<span class="linenos" data-linenos=" 9 "></span>    form.CategoriaId.choices = categorias
+<span class="linenos" data-linenos="10 "></span>    if form.validate_on_submit():
+<span class="linenos" data-linenos="11 "></span>        # Borramos la imagen anterior si hemos subido una nueva
+<span class="linenos" data-linenos="12 "></span>        if form.photo.data:
+<span class="linenos" data-linenos="13 "></span>            os.remove(app.root_path + &quot;/static/upload/&quot; + art.image)
+<span class="linenos" data-linenos="14 "></span>            try:
+<span class="linenos" data-linenos="15 "></span>                f = form.photo.data
+<span class="linenos" data-linenos="16 "></span>                nombre_fichero = secure_filename(f.filename)
+<span class="linenos" data-linenos="17 "></span>                f.save(app.root_path + &quot;/static/upload/&quot; + nombre_fichero)
+<span class="linenos" data-linenos="18 "></span>            except:
+<span class="linenos" data-linenos="19 "></span>                nombre_fichero = &quot;&quot;
+<span class="linenos" data-linenos="20 "></span>        else:
+<span class="linenos" data-linenos="21 "></span>            nombre_fichero = art.image
+<span class="linenos" data-linenos="22 "></span>        form.populate_obj(art)
+<span class="linenos" data-linenos="23 "></span>        art.image = nombre_fichero
+<span class="linenos" data-linenos="24 "></span>        db.session.commit()
+<span class="linenos" data-linenos="25 "></span>        return redirect(url_for(&quot;inicio&quot;))
+<span class="linenos" data-linenos="26 "></span>        return render_template(&quot;articulos_edit.html&quot;, form=form,id=id)
 </code></pre></div>
 <p>Se realizan las siguientes acciones:</p>
 <ul>
@@ -137,14 +147,18 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li>Se intenta guardar el fichero que se ha subido en el formulario.</li>
 <li>Si no se ha subido ninguno el nombre la imagen sigue siendo la anterior.</li>
 <li>Se modifica el objeto <code>Articulos</code> al rellenar con los datos del formulario (<code>form.populate_obj(art)</code>).</li>
+<li>Observa que usamos el método os.remove, importa la librería os al inicio del código.</li>
+<li>La última línea es muy importante, le pasamos el id del registro a modificar a la vista. Ten en cuenta que al definir el form no tiene campo id, por tanto se lo tenga que pasar, para que campos estamos editando.</li>
 <li>Si el formulario no es válido se vuelve a generar la plantilla con el formulario con datos, mostrando si lo hemos codificado los errores de validación oportunos.</li>
 </ul>
-</li>
-</ul>
+<p>Nos queda un último paso. Edita el template <code>articulos_edit.html</code> y en la accion del form, pon lo siguiente:</p>
+<p><div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;form class=&quot;form-horizontal&quot; action={{url_for(&quot;articulos_edit&quot;,id=id)}} method=&quot;post&quot; enctype=&quot;multipart/form-data&quot;&gt;
+</code></pre></div>
+Aquí es donde le indicamos que cuando pulse en el botón enviar, llamará el método <code>articulos_edit</code> con el id correspondiente, modificando los datos de dicho registro.</p>
 <h2 id="modificando-categorias">Modificando categorías<a class="headerlink" href="#modificando-categorias" title="Permanent link">&para;</a></h2>
 <p>De una forma similar puedes estudiar el código para ver cómo se modifican las categorías en nuestra base de datos.</p>
 <h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
-<p><a href="../../ejemplos/u25">Código</a></p>
+<p><a href="zip/codigo_6_5.zip">Código</a></p>
 
   <br>
     
