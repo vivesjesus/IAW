@@ -189,9 +189,11 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <span class="linenos" data-linenos="8 "></span>{% endif %}
 </code></pre></div>
 <h2 id="ejercicio">Ejercicio<a class="headerlink" href="#ejercicio" title="Permanent link">&para;</a></h2>
-<p>Realiza los mismos cambios que hiciste en la unidad 7_3 pero ahora utilizando <strong>Flask-Login</strong>
-1. Impide que se vean los botones Añadir, Modificar y Borrar Categorías.</p>
-<ol start="2">
+<p>Realiza los mismos cambios que hiciste en la unidad 7_3 pero ahora utilizando <strong>Flask-Login</strong></p>
+<ol>
+<li>
+<p>Impide que se vean los botones Añadir, Modificar y Borrar Categorías.</p>
+</li>
 <li>
 <p>Una vez eliminados los botones, en teoría no podríamos acceder a dichas partes, pero observa que para "levantar" el error de acceso, usamos el abort(404).
 Este error está muy bien para páginas que no se encuentran (para eso es el 404), pero en vez de la página redireccionar a <code>error.html</code> sería mejor hacerlo a función y a una página personalizada denominada <code>error_permisos.html</code>. En dicha página se indicará por ejemplo:
