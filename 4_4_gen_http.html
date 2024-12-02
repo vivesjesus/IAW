@@ -33,9 +33,9 @@
         
         var pageToc = [
           {title: "Generando respuestas HTTP, respuestas de error y redirecciones", url: "#_top", children: [
-              {title: "Ejemplo de respuestas", url: "#ejemplo-de-respuestas" },
-              {title: "Respuestas de error", url: "#respuestas-de-error" },
-              {title: "Redirecciones", url: "#redirecciones" },
+              {title: "** Ejemplo de respuestas**", url: "#ejemplo-de-respuestas" },
+              {title: "** Respuestas de error **", url: "#respuestas-de-error" },
+              {title: "** Redirecciones **", url: "#redirecciones" },
           ]},
         ];
 
@@ -91,7 +91,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li>Un objeto de la clase response generado con la función make_repsonse, que recibe los datos devueltos, el código de estado y las cabeceras.</li>
 <li>Una tupla con los mismos datos: datos, cabeceras y código de respuesta.</li>
 </ul>
-<h2 id="ejemplo-de-respuestas"><strong> Ejemplo de respuestas</strong><a class="headerlink" href="#ejemplo-de-respuestas" title="Permanent link">&para;</a></h2>
+<h2 id="ejemplo-de-respuestas">** Ejemplo de respuestas**<a class="headerlink" href="#ejemplo-de-respuestas" title="Permanent link">&para;</a></h2>
 <hr />
 <p>Veamos el siguiente código:
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>from flask import Flask, request, make_response, abort, redirect, url_for
@@ -110,7 +110,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <span class="linenos" data-linenos="14 "></span>    return &#39;Hello, world!&#39;, 200, {&#39;Content-Type&#39;:&#39;text/plain&#39;}
 </code></pre></div>
 Puedes comprobar que devuelve cada una de las rutas.</p>
-<h2 id="respuestas-de-error"><strong> Respuestas de error </strong><a class="headerlink" href="#respuestas-de-error" title="Permanent link">&para;</a></h2>
+<h2 id="respuestas-de-error">** Respuestas de error **<a class="headerlink" href="#respuestas-de-error" title="Permanent link">&para;</a></h2>
 <hr />
 <p>Si queremos que en cualquier momento devolver una respuesta HTTP de error podemos utilizar la función abort:
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/login&#39;)
@@ -134,7 +134,7 @@ Si queremos responder de la misma manera un determinado código de estado, por e
 <span class="linenos" data-linenos="5 "></span>curl  http://localhost:5000/PaginaNoExiste 
 <span class="linenos" data-linenos="6 "></span>Página no encontrada...
 </code></pre></div></p>
-<h2 id="redirecciones"><strong> Redirecciones </strong><a class="headerlink" href="#redirecciones" title="Permanent link">&para;</a></h2>
+<h2 id="redirecciones">** Redirecciones **<a class="headerlink" href="#redirecciones" title="Permanent link">&para;</a></h2>
 <hr />
 <p>Si queremos realizar una redicirección HTTP a otra URL utilizamos la función redirect:
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/&#39;)

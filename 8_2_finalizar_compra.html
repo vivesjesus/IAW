@@ -86,9 +86,13 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
     <h1 id="finalizacion-de-la-compra">Finalización de la compra<a class="headerlink" href="#finalizacion-de-la-compra" title="Permanent link">&para;</a></h1>
 <p>En esta última unidad vamos a simular el final de la compra, en este caso hemos simplificado mucho este proceso, simplemente vamos a mostrar la lista de los artículos comprados, el precio final y vamos a actualizar el stock de cada uno de los artículos.</p>
 <h2 id="realizar-pedido">Realizar pedido<a class="headerlink" href="#realizar-pedido" title="Permanent link">&para;</a></h2>
-<p>En la plantilla <code>carrito.hrml</code> hemos introducido un enlace al la ruta <code>pedido</code>:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;a class=&quot;btn btn-primary&quot; href=&quot;{{url_for(&#39;pedido&#39;)}}&quot; role=&quot;button&quot;&gt;Comprar&lt;/a&gt;
-</code></pre></div>
+<p>En la plantilla <code>carrito.html</code> hemos introducido un enlace al la ruta <code>pedido</code>:
+    <a class="btn btn-primary" href="{{url_for('pedido')}}" role="button">Comprar</a></p>
+<p>Este código va entre el Total h2 y el fin de capa
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>    &lt;h2&gt;Total:{{total}}&lt;/h2&gt;
+<span class="linenos" data-linenos="2 "></span>    &lt;a class=&quot;btn btn-primary&quot; href=&quot;{{url_for(&#39;pedido&#39;)}}&quot; role=&quot;button&quot;&gt;Comprar&lt;/a&gt;
+<span class="linenos" data-linenos="3 "></span>    &lt;/div&gt;
+</code></pre></div></p>
 <p>En esta ruta vamos a realizar las siguientes acciones:</p>
 <ul>
 <li>Vamos a leer los datos de la cookie</li>
@@ -97,25 +101,41 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li>Borramos la cookie</li>
 <li>Utilizando la plantilla <code>pedido.html</code> mostramos los artículos y el precio final.</li>
 </ul>
-<p>El código quedaría de la siguiente forma:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/pedido&#39;)
-<span class="linenos" data-linenos=" 2 "></span>@login_required
-<span class="linenos" data-linenos=" 3 "></span>def pedido():
-<span class="linenos" data-linenos=" 4 "></span>    try:
-<span class="linenos" data-linenos=" 5 "></span>        datos = json.loads(request.cookies.get(str(current_user.id)))
-<span class="linenos" data-linenos=" 6 "></span>    except:
-<span class="linenos" data-linenos=" 7 "></span>        datos = []
-<span class="linenos" data-linenos=" 8 "></span>    total=0
-<span class="linenos" data-linenos=" 9 "></span>    for articulo in datos:
-<span class="linenos" data-linenos="10 "></span>        total=total+Articulos.query.get(articulo[&quot;id&quot;]).precio_final()*articulo[&quot;cantidad&quot;]
-<span class="linenos" data-linenos="11 "></span>        Articulos.query.get(articulo[&quot;id&quot;]).stock-=articulo[&quot;cantidad&quot;]
-<span class="linenos" data-linenos="12 "></span>        db.session.commit()
-<span class="linenos" data-linenos="13 "></span>    resp = make_response(render_template(&quot;pedido.html&quot;,total=total))
-<span class="linenos" data-linenos="14 "></span>    resp.set_cookie(str(current_user.id),&quot;&quot;,expires=0)
-<span class="linenos" data-linenos="15 "></span>    return resp
-</code></pre></div>
+<p>El código quedaría de la siguiente forma:
+<strong>app.py</strong>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>    @app.route(&#39;/pedido&#39;)
+<span class="linenos" data-linenos=" 2 "></span>    @login_required
+<span class="linenos" data-linenos=" 3 "></span>    def pedido():
+<span class="linenos" data-linenos=" 4 "></span>        from aplicacion.models import Articulos
+<span class="linenos" data-linenos=" 5 "></span>        try:
+<span class="linenos" data-linenos=" 6 "></span>            datos = json.loads(request.cookies.get(str(current_user.id)))
+<span class="linenos" data-linenos=" 7 "></span>        except:
+<span class="linenos" data-linenos=" 8 "></span>            datos = []
+<span class="linenos" data-linenos=" 9 "></span>        total=0
+<span class="linenos" data-linenos="10 "></span>        for articulo in datos:
+<span class="linenos" data-linenos="11 "></span>            total=total+Articulos.query.get(articulo[&quot;id&quot;]).precio_final()*articulo[&quot;cantidad&quot;]
+<span class="linenos" data-linenos="12 "></span>            Articulos.query.get(articulo[&quot;id&quot;]).stock-=articulo[&quot;cantidad&quot;]
+<span class="linenos" data-linenos="13 "></span>            db.session.commit()
+<span class="linenos" data-linenos="14 "></span>        resp = make_response(render_template(&quot;pedido.html&quot;,total=total))
+<span class="linenos" data-linenos="15 "></span>        resp.set_cookie(str(current_user.id),&quot;&quot;,expires=0)
+<span class="linenos" data-linenos="16 "></span>        return resp
+</code></pre></div></p>
+<p>Template <strong>pedido.html</strong>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>    {% extends &quot;base.html&quot; %}
+<span class="linenos" data-linenos=" 2 "></span>    {% block title %}Tienda de Videojuegos{% endblock %}
+<span class="linenos" data-linenos=" 3 "></span>    {% block contenido %}
+<span class="linenos" data-linenos=" 4 "></span>    &lt;div class=&quot;container&quot;&gt;
+<span class="linenos" data-linenos=" 5 "></span>    &lt;div class=&quot;row&quot;&gt;
+<span class="linenos" data-linenos=" 6 "></span>        &lt;h3&gt;Gracias por comprar en nuestra tienda&lt;/h3&gt;  
+<span class="linenos" data-linenos=" 7 "></span>        &lt;h2&gt;Tienes que pagar: {{total}}&lt;/h2&gt;
+<span class="linenos" data-linenos=" 8 "></span>        &lt;a class=&quot;btn btn-primary&quot; href=&quot;{{url_for(&#39;inicio&#39;)}}&quot; role=&quot;button&quot;&gt;Finalizar&lt;/a&gt;
+<span class="linenos" data-linenos=" 9 "></span>    &lt;/div&gt;
+<span class="linenos" data-linenos="10 "></span>    &lt;/div&gt;
+<span class="linenos" data-linenos="11 "></span>    {% endblock %}
+</code></pre></div></p>
+<p>Como puedes observar el código realmente no compra, no vamos a una pasarela de pago, ni en realidad hay posibilidad de cobro. Mas, estoy convencido que como aproximación a Flask, los contenidos trabajados son más que suficientes.</p>
 <h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
-<p><a href="../../ejemplos/u32">Código</a></p>
+<p><a href="zip/codigo_8_2.zip">Código</a></p>
 
   <br>
     

@@ -37,6 +37,7 @@
               {title: "\u00bfC\u00f3mo determinamos la clase de usuario con el que estamos trabajando?", url: "#como-determinamos-la-clase-de-usuario-con-el-que-estamos-trabajando" },
               {title: "Control de acceso", url: "#control-de-acceso_1" },
               {title: "Generando contenido seg\u00fan el tipo de usuario", url: "#generando-contenido-segun-el-tipo-de-usuario" },
+              {title: "Ejercicio", url: "#ejercicio" },
               {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
           ]},
         ];
@@ -75,10 +76,10 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
     </div>
     
     <div class="wm-article-nav">
-      <a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-default pull-left">
+      <a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-default pull-left">
         <i class="fa fa-chevron-left" aria-hidden="true"></i>
-        Previous</a><a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-link">
-        7.2 Registrando nuevos usuarios
+        Previous</a><a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-link">
+        7.1 Gestión de usuarios con sesiones
       </a>
     </div>
     
@@ -98,66 +99,66 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <table>
 <thead>
 <tr>
-<th align="left">Acción</th>
-<th align="center">Invitado</th>
-<th align="center">Normal</th>
-<th align="center">Administrador</th>
+<th style="text-align: left;">Acción</th>
+<th style="text-align: center;">Invitado</th>
+<th style="text-align: center;">Normal</th>
+<th style="text-align: center;">Administrador</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left">Hacer login</td>
-<td align="center">Si</td>
-<td align="center">No</td>
-<td align="center">No</td>
+<td style="text-align: left;">Hacer login</td>
+<td style="text-align: center;">Si</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">No</td>
 </tr>
 <tr>
-<td align="left">Registrarse</td>
-<td align="center">Si</td>
-<td align="center">No</td>
-<td align="center">No</td>
+<td style="text-align: left;">Registrarse</td>
+<td style="text-align: center;">Si</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">No</td>
 </tr>
 <tr>
-<td align="left">Ver perfil</td>
-<td align="center">No</td>
-<td align="center">Si</td>
-<td align="center">Si</td>
+<td style="text-align: left;">Ver perfil</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Si</td>
+<td style="text-align: center;">Si</td>
 </tr>
 <tr>
-<td align="left">Puede cambiar la contraseña</td>
-<td align="center">No</td>
-<td align="center">Si</td>
-<td align="center">Si</td>
+<td style="text-align: left;">Puede cambiar la contraseña</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Si</td>
+<td style="text-align: center;">Si</td>
 </tr>
 <tr>
-<td align="left">Puede ver los videojuegos</td>
-<td align="center">Si</td>
-<td align="center">Si</td>
-<td align="center">Si</td>
+<td style="text-align: left;">Puede ver los videojuegos</td>
+<td style="text-align: center;">Si</td>
+<td style="text-align: center;">Si</td>
+<td style="text-align: center;">Si</td>
 </tr>
 <tr>
-<td align="left">Puede ver las categorías</td>
-<td align="center">Si</td>
-<td align="center">Si</td>
-<td align="center">Si</td>
+<td style="text-align: left;">Puede ver las categorías</td>
+<td style="text-align: center;">Si</td>
+<td style="text-align: center;">Si</td>
+<td style="text-align: center;">Si</td>
 </tr>
 <tr>
-<td align="left">Puede añadir categorías y videojuegos</td>
-<td align="center">No</td>
-<td align="center">No</td>
-<td align="center">Si</td>
+<td style="text-align: left;">Puede añadir categorías y videojuegos</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Si</td>
 </tr>
 <tr>
-<td align="left">Puede modificar y borrar categorías y videojuegos</td>
-<td align="center">No</td>
-<td align="center">No</td>
-<td align="center">Si</td>
+<td style="text-align: left;">Puede modificar y borrar categorías y videojuegos</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Si</td>
 </tr>
 <tr>
-<td align="left">Puede comprar videojuegos</td>
-<td align="center">No</td>
-<td align="center">Si</td>
-<td align="center">Si</td>
+<td style="text-align: left;">Puede comprar videojuegos</td>
+<td style="text-align: center;">No</td>
+<td style="text-align: center;">Si</td>
+<td style="text-align: center;">Si</td>
 </tr>
 </tbody>
 </table>
@@ -185,7 +186,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <span class="linenos" data-linenos="7 "></span>def is_admin():
 <span class="linenos" data-linenos="8 "></span>    return session.get(&quot;admin&quot;,False)
 </code></pre></div>
-<p>Por otro lado, en unidades anteriores no teníamos ningún problema al preguntar por la variable <code>session</code> en las plantillas, si queremos hacerlo un poco más elegante podríamos crear dos variables en el contexto de las plantillas que me permitan determinar el rol del usuario, para ello en el mismo fichero <code>login.py</code>:</p>
+<p>Por otro lado, en unidades anteriores no teníamos ningún problema al preguntar por la variable <code>session</code> en las plantillas, si queremos hacerlo un poco más elegante podríamos crear dos variables en el contexto de las plantillas que me permitan determinar el rol del usuario, para ello en el fichero <code>app.py</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.context_processor
 <span class="linenos" data-linenos=" 2 "></span>def login():
 <span class="linenos" data-linenos=" 3 "></span>    if &quot;id&quot; in session:
@@ -197,7 +198,9 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <span class="linenos" data-linenos=" 9 "></span>def admin():
 <span class="linenos" data-linenos="10 "></span>    return {&#39;is_admin&#39;:session.get(&quot;admin&quot;,False) }
 </code></pre></div>
-<p>Donde creamos dos variables: <code>is_login</code> y <code>is_admin</code> que podemos utilizar en las plantillas.</p>
+<p>Donde creamos dos variables: <code>is_login</code> y <code>is_admin</code> que podemos utilizar en las plantillas.
+Por cierto esto te obliga a importar la <strong>session</strong> en flask
+    from flask import Flask, render_template, redirect, url_for, request, abort, session</p>
 <h2 id="control-de-acceso_1">Control de acceso<a class="headerlink" href="#control-de-acceso_1" title="Permanent link">&para;</a></h2>
 <p>Por ejemplo la ruta <code>/articulos/new</code> que nos permite añadir un videojuego sólo se debería permitir a los usuarios administradores, por lo que al principio realizamos la comprobación:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>if not is_admin():
@@ -233,8 +236,24 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <span class="linenos" data-linenos="7 "></span>    &lt;td&gt;&lt;a href=&quot;#&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-shopping-cart&quot;&gt;&lt;/span&gt; Comprar&lt;/a&gt;&lt;/td&gt;
 <span class="linenos" data-linenos="8 "></span>{% endif %}
 </code></pre></div>
+<h2 id="ejercicio">Ejercicio<a class="headerlink" href="#ejercicio" title="Permanent link">&para;</a></h2>
+<p>Es evidente, que cualquier usuario no admin, no puede ver los botones, Añadir, Modificar ni Borrar artículos de la tienda. Perfecto.
+Pero ¿qué pasa con las Categorías? Se siguen viendo los botones Añadir, Modificar y Borrar si no es un admin.
+1. Impide que se vean los botones Añadir, Modificar y Borrar Categorías.</p>
+<ol start="2">
+<li>
+<p>Una vez eliminados los botones, en teoría no podríamos acceder a dichas partes, pero observa que para "levantar" el error de acceso, usamos el abort(404).
+Este error está muy bien para páginas que no se encuentran (para eso es el 404), pero en vez de la página redireccionar a <code>error.html</code> sería mejor hacerlo a función y a una página personalizada denominada <code>error_permisos.html</code>. En dicha página se indicará por ejemplo:
+Usuario Maria tiene permisos para modificar la Categoria.
+Usuario Maria tiene permisos para Añadir la Categoria.
+Y así, todos.</p>
+</li>
+<li>
+<p>Añade todo lo trabajado hasta ahora, a la aplicación Digimones.</p>
+</li>
+</ol>
 <h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
-<p><a href="../../ejemplos/u29">Código</a></p>
+<p><a href="zip/codigo_7_3.zip">Código</a></p>
 
   <br>
     
@@ -257,10 +276,10 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
     </div>
     
     <div class="wm-article-nav">
-      <a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-default pull-left">
+      <a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-default pull-left">
         <i class="fa fa-chevron-left" aria-hidden="true"></i>
-        Previous</a><a href="7_2_nuevos_usaurios.html" class="btn btn-xs btn-link">
-        7.2 Registrando nuevos usuarios
+        Previous</a><a href="7_1_gestion_usuarios.html" class="btn btn-xs btn-link">
+        7.1 Gestión de usuarios con sesiones
       </a>
     </div>
     

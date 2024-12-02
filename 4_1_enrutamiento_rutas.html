@@ -32,10 +32,10 @@
       var is_top_frame = false;
         
         var pageToc = [
-          {title: "Enrutamiento: rutas", url: "#_top", children: [
-              {title: "Trabajando con rutas", url: "#trabajando-con-rutas" },
-              {title: "Rutas din\u00e1micas", url: "#rutas-dinamicas" },
-              {title: "Construcci\u00f3n de rutas", url: "#construccion-de-rutas" },
+          {title: "** Enrutamiento: rutas**", url: "#_top", children: [
+              {title: "** Trabajando con rutas**", url: "#trabajando-con-rutas" },
+              {title: "** Rutas din\u00e1micas**", url: "#rutas-dinamicas" },
+              {title: "** Construcci\u00f3n de rutas**", url: "#construccion-de-rutas" },
           ]},
         ];
 
@@ -84,9 +84,9 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 
     
 
-    <h1 id="enrutamiento-rutas"><strong> Enrutamiento: rutas</strong><a class="headerlink" href="#enrutamiento-rutas" title="Permanent link">&para;</a></h1>
+    <h1 id="enrutamiento-rutas">** Enrutamiento: rutas**<a class="headerlink" href="#enrutamiento-rutas" title="Permanent link">&para;</a></h1>
 <p>El objeto Flask app nos proporciona un decorador router que es capaz de filtrar la función vista que se va ejecutar analizando la petición HTTP, fundamentalmente por la ruta y el método que se hace la petición.</p>
-<h2 id="trabajando-con-rutas"><strong> Trabajando con rutas</strong><a class="headerlink" href="#trabajando-con-rutas" title="Permanent link">&para;</a></h2>
+<h2 id="trabajando-con-rutas">** Trabajando con rutas**<a class="headerlink" href="#trabajando-con-rutas" title="Permanent link">&para;</a></h2>
 <hr />
 <p>Veamos un ejemplo:
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>...
@@ -127,7 +127,7 @@ Si declaramos la rutas sin / final, se consideran un fichero del sistema de fich
 <span class="linenos" data-linenos="8 "></span>&lt;p&gt;The requested URL was not found on the server.  If you entered the URL manually please check your spelling and try again.&lt;/p&gt;
 </code></pre></div>
 Si la ruta de la petición HTTP no corresponde con ninguna que hayamos indicado se devolverá una respuesta con código de estado 404 indicando que no se ha encontrado el recurso.</p>
-<h2 id="rutas-dinamicas"><strong> Rutas dinámicas</strong><a class="headerlink" href="#rutas-dinamicas" title="Permanent link">&para;</a></h2>
+<h2 id="rutas-dinamicas">** Rutas dinámicas**<a class="headerlink" href="#rutas-dinamicas" title="Permanent link">&para;</a></h2>
 <p>Podemos gestionar rutas variables, es decir que correspondan a un determinado patrón o expresión regular, por ejemplo:
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&quot;/articulos/&lt;int:id&gt;&quot;)
 <span class="linenos" data-linenos="2 "></span>def mostrar_ariculo(id):
@@ -164,7 +164,7 @@ La parte dinámica de la ruta la podemos obtener como variable que recibe la fun
 <li>float: Acepta valores reales</li>
 <li>path: Acepta cadena de caracteres con barras</li>
 </ul>
-<h2 id="construccion-de-rutas"><strong> Construcción de rutas</strong><a class="headerlink" href="#construccion-de-rutas" title="Permanent link">&para;</a></h2>
+<h2 id="construccion-de-rutas">** Construcción de rutas**<a class="headerlink" href="#construccion-de-rutas" title="Permanent link">&para;</a></h2>
 <p>Podemos importar la función url_for que nos permite construir rutas a partir del nombre de la función asociada:
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>python3 manage shell
 <span class="linenos" data-linenos=" 2 "></span>

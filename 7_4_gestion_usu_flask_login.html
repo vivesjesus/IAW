@@ -38,6 +38,7 @@
               {title: "Llamando al cargador de User", url: "#llamando-al-cargador-de-user" },
               {title: "Control de acceso", url: "#control-de-acceso" },
               {title: "Generando contenido seg\u00fan el tipo de usuario", url: "#generando-contenido-segun-el-tipo-de-usuario" },
+              {title: "Ejercicio", url: "#ejercicio" },
               {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
           ]},
         ];
@@ -96,6 +97,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <p>Con nuestro entorno virtual activado:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>pip install Flask-Login
 </code></pre></div>
+<p><strong>Esta parte se recomienda analizarla con el código descargado e ir comprobando los cambios entre los apuntes y el código.</strong></p>
 <p>En el programa principal configuramos la extensión:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>from flask_login import LoginManager,login_user,logout_user,login_required,current_user
 <span class="linenos" data-linenos="2 "></span>...
@@ -136,7 +138,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li><code>is_admin</code>: devuelve "True" si el usuario logueado es administrador.</li>
 </ul>
 <h2 id="llamando-al-cargador-de-user">Llamando al cargador de User<a class="headerlink" href="#llamando-al-cargador-de-user" title="Permanent link">&para;</a></h2>
-<p>La extensión Flask-Login no nos permite acceder directamente a la tabla de usuarios para obtener la información de un determinado usuario, por lo tanto en el programa principal tenemos que escribir una función que va a utilizar Flask-Login:</p>
+<p>La extensión Flask-Login no nos permite acceder directamente a la tabla de usuarios para obtener la información de un determinado usuario, por lo tanto en el programa principal tenemos que escribir una función que va a utilizar Flask-Login y esto va en <code>app.py</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@login_manager.user_loader
 <span class="linenos" data-linenos="2 "></span>def load_user(user_id):
 <span class="linenos" data-linenos="3 "></span>    return Usuarios.query.get(int(user_id))
@@ -147,7 +149,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <span class="linenos" data-linenos="2 "></span>@login_required
 <span class="linenos" data-linenos="3 "></span>def ...
 </code></pre></div>
-<p>Sin embrgo si queremos restringuir por el rol, por ejemplo: la ruta <code>/articulos/new</code> que nos permite añadir un videojuego sólo se debería permitir a los usuarios adminitradores, deberáimos codificarlo de la siguiente manera:</p>
+<p>Sin embargo si queremos restringuir por el rol, por ejemplo: la ruta <code>/articulos/new</code> que nos permite añadir un videojuego sólo se debería permitir a los usuarios adminitradores, deberáimos codificarlo de la siguiente manera:</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.route(&#39;/articulos/new&#39;, methods=[&quot;get&quot;,&quot;post&quot;])
 <span class="linenos" data-linenos="2 "></span>@login_required
 <span class="linenos" data-linenos="3 "></span>def articulos_new():
@@ -186,8 +188,23 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <span class="linenos" data-linenos="7 "></span>    &lt;td&gt;&lt;a href=&quot;#&quot;&gt;&lt;span class=&quot;glyphicon glyphicon-shopping-cart&quot;&gt;&lt;/span&gt; Comprar&lt;/a&gt;&lt;/td&gt;
 <span class="linenos" data-linenos="8 "></span>{% endif %}
 </code></pre></div>
+<h2 id="ejercicio">Ejercicio<a class="headerlink" href="#ejercicio" title="Permanent link">&para;</a></h2>
+<p>Realiza los mismos cambios que hiciste en la unidad 7_3 pero ahora utilizando <strong>Flask-Login</strong>
+1. Impide que se vean los botones Añadir, Modificar y Borrar Categorías.</p>
+<ol start="2">
+<li>
+<p>Una vez eliminados los botones, en teoría no podríamos acceder a dichas partes, pero observa que para "levantar" el error de acceso, usamos el abort(404).
+Este error está muy bien para páginas que no se encuentran (para eso es el 404), pero en vez de la página redireccionar a <code>error.html</code> sería mejor hacerlo a función y a una página personalizada denominada <code>error_permisos.html</code>. En dicha página se indicará por ejemplo:
+Usuario Maria tiene permisos para modificar la Categoria.
+Usuario Maria tiene permisos para Añadir la Categoria.
+Y así, todos.</p>
+</li>
+<li>
+<p>Añade todo lo trabajado hasta ahora, a la aplicación Digimones.</p>
+</li>
+</ol>
 <h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
-<p><a href="../../ejemplos/u30">Código</a></p>
+<p><a href="zip/codigo_7_4.zip">Código</a></p>
 
   <br>
     

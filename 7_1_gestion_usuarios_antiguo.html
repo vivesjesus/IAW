@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     
-    <link rel="canonical" href="https://vivesjesus.github.io/iaw/7_1_gestion_usuarios.html">
+    <link rel="canonical" href="https://vivesjesus.github.io/iaw/7_1_gestion_usuarios_antiguo.html">
     <link rel="shortcut icon" href="./img/favicon.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
-    <title>7.1 Gestión de usuarios con sesiones - IMPLANTACIÓN APLICACIONES WEB</title>
+    <title>Gestión de usuarios con sesiones - IMPLANTACIÓN APLICACIONES WEB</title>
     <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
     <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
     <link href="./css/base.css" rel="stylesheet">
@@ -34,6 +34,7 @@
         var pageToc = [
           {title: "Gesti\u00f3n de usuarios con sesiones", url: "#_top", children: [
               {title: "El modelo de datos para guardar los usuarios", url: "#el-modelo-de-datos-para-guardar-los-usuarios" },
+              {title: "Creaci\u00f3n del usuario administrador", url: "#creacion-del-usuario-administrador" },
               {title: "Autentficando usuarios en nuestra aplicaci\u00f3n", url: "#autentficando-usuarios-en-nuestra-aplicacion" },
               {title: "C\u00f3digo ejemplo de esta unidad", url: "#codigo-ejemplo-de-esta-unidad" },
           ]},
@@ -54,33 +55,6 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <div class="container-fluid wm-page-content">
   <a name="_top"></a>
     
-
-    
-    
-      
-    
-
-  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
-    
-    <div class="wm-article-nav pull-right">
-      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-default pull-right">
-        Next
-        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-      </a>
-      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-link">
-        7.3 Gestión de permisos de usuarios
-      </a>
-    </div>
-    
-    <div class="wm-article-nav">
-      <a href="6_6_borrando.html" class="btn btn-xs btn-default pull-left">
-        <i class="fa fa-chevron-left" aria-hidden="true"></i>
-        Previous</a><a href="6_6_borrando.html" class="btn btn-xs btn-link">
-        6.6. Borrando un Registro
-      </a>
-    </div>
-    
-  </div>
 
     
 
@@ -118,28 +92,43 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li>Tenemos una propiedad <code>password</code>. Al intentar obtener su valor, nos devuelve una excepción indicado que no se puede leer, si intentamos modificarla, lo que realmente se hace es cifrarla en el atributo <code>password_hash</code> con la función <code>generate_password_hash</code> del módulo <code>werkzeug.security</code>.</li>
 <li>También tenemos un método <code>verify_password</code> que utilizando la función <code>check_password_hash</code> del módulo <code>werkzeug.security</code>, nos permite verificar si la contraseña guarda es igual a la indicada como parámetro.</li>
 </ul>
-<p>Tenemos que volver a generar las tablas para tener a nuestra disposición el nuevo modelo. Una vez realizada esta operación añadimos datos a nuestro inicializar: <code>inicializacion_datos.py</code>, así podemos añadir usaurios de prueba</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>usuarios = [
-<span class="linenos" data-linenos=" 2 "></span>    {&quot;username&quot;: &quot;Luis&quot;, &quot;password_hash&quot;:generate_password_hash( &quot;1234&quot;), &quot;nombre&quot;:
-<span class="linenos" data-linenos=" 3 "></span>     &quot;Luis Martín Basket &quot;, &quot;email&quot;: &quot;l@gmail.com&quot;,
-<span class="linenos" data-linenos=" 4 "></span>     &quot;admin&quot;: False},
-<span class="linenos" data-linenos=" 5 "></span>    {&quot;username&quot;: &quot;Ana&quot;, &quot;password_hash&quot;: generate_password_hash(&quot;1234&quot;), &quot;nombre&quot;:
-<span class="linenos" data-linenos=" 6 "></span>     &quot;Ana Martín Basket &quot;, &quot;email&quot;: &quot;a@gmail.com&quot;,
-<span class="linenos" data-linenos=" 7 "></span>     &quot;admin&quot;: False},
-<span class="linenos" data-linenos=" 8 "></span>     {&quot;username&quot;: &quot;Maria&quot;, &quot;password_hash&quot;: generate_password_hash(&quot;1234&quot;), &quot;nombre&quot;:
-<span class="linenos" data-linenos=" 9 "></span>     &quot;Maria Martín Basket &quot;, &quot;email&quot;: &quot;m@gmail.com&quot;,
-<span class="linenos" data-linenos="10 "></span>     &quot;admin&quot;: False},
-<span class="linenos" data-linenos="11 "></span>    {&quot;username&quot;: &quot;admin&quot;, &quot;password_hash&quot;: generate_password_hash(&quot;1234&quot;), &quot;nombre&quot;:
-<span class="linenos" data-linenos="12 "></span>     &quot;Administrador &quot;, &quot;email&quot;: &quot;admin@miapp.com&quot;,
-<span class="linenos" data-linenos="13 "></span>     &quot;admin&quot;: True},
-<span class="linenos" data-linenos="14 "></span>]
-<span class="linenos" data-linenos="15 "></span>
-<span class="linenos" data-linenos="16 "></span>for usu in usuarios:
-<span class="linenos" data-linenos="17 "></span>    usuario = Usuarios(**usu)
-<span class="linenos" data-linenos="18 "></span>    db.session.add(usuario)
-<span class="linenos" data-linenos="19 "></span>    db.session.commit()
+<p>Tenemos que volver a generar las tablas para tener a nuestra disposición el nuevo modelo. Una vez realizada esta operación podemos hacer una prueba, creando un usuario:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>&gt;&gt;&gt; from aplicacion.app import db
+<span class="linenos" data-linenos=" 2 "></span>&gt;&gt;&gt; from aplicacion.models import Usuarios
+<span class="linenos" data-linenos=" 3 "></span>&gt;&gt;&gt; u=Usuarios()
+<span class="linenos" data-linenos=" 4 "></span>&gt;&gt;&gt; u.nombre=&quot;pepe&quot;
+<span class="linenos" data-linenos=" 5 "></span>&gt;&gt;&gt; u.password=&quot;asdasd&quot;
+<span class="linenos" data-linenos=" 6 "></span>&gt;&gt;&gt; u.username=&quot;pepe&quot;
+<span class="linenos" data-linenos=" 7 "></span>&gt;&gt;&gt; u.email=&quot;a@a.es&quot;
+<span class="linenos" data-linenos=" 8 "></span>&gt;&gt;&gt; db.session.add(u)
+<span class="linenos" data-linenos=" 9 "></span>&gt;&gt;&gt; db.session.commit()
+<span class="linenos" data-linenos="10 "></span>&gt;&gt;&gt; u.password_hash
+<span class="linenos" data-linenos="11 "></span>&gt;&gt;&gt; &#39;pbkdf2:sha256:50000$EFhxMbr1$ea8e6ddeaaac8d73d01f78f1b3d3120184cc25aea9491e632b4fc8c9ae2705cb&#39;
+<span class="linenos" data-linenos="12 "></span>&gt;&gt;&gt; u.password
+<span class="linenos" data-linenos="13 "></span>Traceback (most recent call last):
+<span class="linenos" data-linenos="14 "></span>  File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
+<span class="linenos" data-linenos="15 "></span>  File &quot;/home/jose/github/curso_flask/ejemplos/u27/aplicacion/models.py&quot;, line 53, in password
+<span class="linenos" data-linenos="16 "></span>    raise AttributeError(&#39;password is not a readable attribute&#39;)
+<span class="linenos" data-linenos="17 "></span>AttributeError: password is not a readable attribute
 </code></pre></div>
-<p>Si te fijas hemos creado 3 usurios "normales" y un usuarios administrador, <strong>admin</strong>.</p>
+<h2 id="creacion-del-usuario-administrador">Creación del usuario administrador<a class="headerlink" href="#creacion-del-usuario-administrador" title="Permanent link">&para;</a></h2>
+<p>Para facilitar la creación de un primer usuario con rol administrador hemos introducido una nueva funcionalidad en nuestro script <code>manage.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@manager.command
+<span class="linenos" data-linenos=" 2 "></span>def create_admin():
+<span class="linenos" data-linenos=" 3 "></span>    usuario={&quot;username&quot;:input(&quot;Usuario:&quot;),
+<span class="linenos" data-linenos=" 4 "></span>            &quot;password&quot;:getpass(&quot;Password:&quot;),
+<span class="linenos" data-linenos=" 5 "></span>            &quot;nombre&quot;:input(&quot;Nombre completo:&quot;),
+<span class="linenos" data-linenos=" 6 "></span>            &quot;email&quot;:input(&quot;Email:&quot;),
+<span class="linenos" data-linenos=" 7 "></span>            &quot;admin&quot;: True}
+<span class="linenos" data-linenos=" 8 "></span>    usu=Usuarios(**usuario)
+<span class="linenos" data-linenos=" 9 "></span>    db.session.add(usu)
+<span class="linenos" data-linenos="10 "></span>    db.session.commit()
+</code></pre></div>
+<p>Que nos pide los datos del usuario por teclado y crea un usuario administrador:</p>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>$ python3 manage.py create_admin
+<span class="linenos" data-linenos="2 "></span>Usuario:
+<span class="linenos" data-linenos="3 "></span>...
+</code></pre></div>
 <h2 id="autentficando-usuarios-en-nuestra-aplicacion">Autentficando usuarios en nuestra aplicación<a class="headerlink" href="#autentficando-usuarios-en-nuestra-aplicacion" title="Permanent link">&para;</a></h2>
 <p>Una vez que tenemos preparado nuestro modelo de datos y utilizando sesiones vamos a programar la posibilidad de que un usuario se autentifique en nuestra aplicación y simulemos una sesión en ella hasta que salga del sistema. Para ello vamos a realizar los siguientes pasos:</p>
 <ul>
@@ -199,75 +188,19 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 </code></pre></div>
 </li>
 </ul>
-<p>Evidentemente nos falta incluir el template <strong>login.html</strong>.</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>{% extends &quot;base.html&quot; %}
-<span class="linenos" data-linenos=" 2 "></span>{% block title %}Tienda de Videojuegos{% endblock %}
-<span class="linenos" data-linenos=" 3 "></span>{% block contenido %}
-<span class="linenos" data-linenos=" 4 "></span>
-<span class="linenos" data-linenos=" 5 "></span>&lt;div class=&quot;container&quot;&gt;
-<span class="linenos" data-linenos=" 6 "></span>&lt;div class=&quot;col-md-4&quot;&gt;&lt;/div&gt;
-<span class="linenos" data-linenos=" 7 "></span>&lt;div class=&quot;col-md-4&quot;&gt;
-<span class="linenos" data-linenos=" 8 "></span>    &lt;form class=&quot;form-signin&quot; method=&quot;post&quot;&gt;
-<span class="linenos" data-linenos=" 9 "></span>    {% for field, errors in form.errors.items() %}
-<span class="linenos" data-linenos="10 "></span>        &lt;div class=&quot;alert alert-danger&quot;&gt;
-<span class="linenos" data-linenos="11 "></span>        {{ form[field].label }}: {{ &#39;, &#39;.join(errors) }}
-<span class="linenos" data-linenos="12 "></span>        &lt;/div&gt;
-<span class="linenos" data-linenos="13 "></span>    {% endfor %}
-<span class="linenos" data-linenos="14 "></span>        &lt;h2 class=&quot;form-signin-heading&quot;&gt;Login&lt;/h2&gt;
-<span class="linenos" data-linenos="15 "></span>        {{ form.csrf_token }}
-<span class="linenos" data-linenos="16 "></span>        {{form.username.label()}}
-<span class="linenos" data-linenos="17 "></span>        {{form.username(class=&quot;form-control&quot;)}}
-<span class="linenos" data-linenos="18 "></span>
-<span class="linenos" data-linenos="19 "></span>        {{form.password.label()}}
-<span class="linenos" data-linenos="20 "></span>        {{form.password(class=&quot;form-control&quot;)}}
-<span class="linenos" data-linenos="21 "></span>        {{form.submit(class=&quot;btn btn-lg btn-primary btn-block&quot;)}}
-<span class="linenos" data-linenos="22 "></span>    &lt;/form&gt;
-<span class="linenos" data-linenos="23 "></span>&lt;/div&gt;
-<span class="linenos" data-linenos="24 "></span>&lt;div class=&quot;col-md-4&quot;&gt;&lt;/div&gt;
-<span class="linenos" data-linenos="25 "></span>    &lt;/div&gt; &lt;!-- /container --&gt;
-<span class="linenos" data-linenos="26 "></span>{% endblock %}
-</code></pre></div>
-<p>Sin sorpresas, un template con formulario normal y corriente</p>
 <p>En la siguiente unidad veremos como posibilitar que los usuarios se registren en nuestra aplicación, creando nuevos usuarios y posteriormente veremos como autorizar las distintas operaciones que puede realizar un usuario según su rol.</p>
 <h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
-<p><a href="zip/codigo_7_1.zip">Código</a></p>
+<p><a href="../../ejemplos/u27">Código</a></p>
 
   <br>
     
-
-    
-    
-      
-    
-
-  <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
-    
-    <div class="wm-article-nav pull-right">
-      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-default pull-right">
-        Next
-        <i class="fa fa-chevron-right" aria-hidden="true"></i>
-      </a>
-      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-link">
-        7.3 Gestión de permisos de usuarios
-      </a>
-    </div>
-    
-    <div class="wm-article-nav">
-      <a href="6_6_borrando.html" class="btn btn-xs btn-default pull-left">
-        <i class="fa fa-chevron-left" aria-hidden="true"></i>
-        Previous</a><a href="6_6_borrando.html" class="btn btn-xs btn-link">
-        6.6. Borrando un Registro
-      </a>
-    </div>
-    
-  </div>
 
     <br>
 </div>
 
 <footer class="container-fluid wm-page-content">
       <p>
-        <a href="https://github.com/vivesjesus/iaw.git/edit/master/docs/7_1_gestion_usuarios.md"><i class="fa fa-github"></i>
+        <a href="https://github.com/vivesjesus/iaw.git/edit/master/docs/7_1_gestion_usuarios_antiguo.md"><i class="fa fa-github"></i>
 Edit on GitHub</a>
       </p><p>2022-2023 Jesús Vives - Licencia CC BY-NC-SA</p>
   <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>

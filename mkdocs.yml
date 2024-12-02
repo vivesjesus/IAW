@@ -1,0 +1,117 @@
+site_name: IMPLANTACIÓN APLICACIONES WEB
+site_url: https://vivesjesus.github.io/iaw/
+repo_url: https://github.com/vivesjesus/iaw.git
+use_directory_urls: false
+
+nav:
+  - Home: "index.md"
+  - "1. INTRODUCCIÓN AL CURSO": "index.md"
+
+  - "2. INTRODUCCIÓN A LA PROGRAMACIÓN WEB":
+      - "2.1. Protocolo HTTP": "2_1_protocolo_http.md"
+      - "2.2 Programación web dinámica": "2_2_web_dinamica.md"
+      - "2.3 Patrón modelo-vista-controlador": "2_3_mvc.md"
+      - "2.4. Introducción a la programación web con python": "2_4_intro_web_py.md"
+
+  - "3. INTRODUCCIÓN A FLASK": 
+      - "3.1. Introducción a flask": "3_1_intro.md"
+      - "3.2. Instalación de flask": "3_2_instalacion_flask.md"
+      - "3.3. Corriendo una aplicación sencilla": "3_3_corriendo_sencillo.md"
+      - "3.4. Organizando el Código": "3_4_organizando_codigo.md"
+
+  - "4. CONTROLADOR: ENRUTAMIENTO, PETICIONES Y RESPUESTAS":
+      - "4.1 Enrutamiento: Rutas": "4_1_enrutamiento_rutas.md"
+      - "4.2 Enrutamiento: Métodos": "4_2_enrutamiento_metodos.md"
+      - "4.3 Trabajando con peticiones HTTP": "4_3_trabajando_peticiones.md"
+      - "4.4 Generando respuestas HTTP, respuestas de error y redirecciones": "4_4_gen_http.md"
+      - "4.5. Contenido Estático": "4_5_contenido_estatico.md"
+      - "4.6. Ejercicios": "4_6_ejercicios.md"
+
+  - "5. VISTA: PLANTILLA Y FORMULARIOS":
+      - "5.1. Plantillas con jinja2": "5_1_plantillas_jinja.md"
+      - "5.2 Generando páginas HTML con Flask y Jinja2": "5_2_flask_jinja.md"
+      - "5.3 Herencia de plantillas": "5_3_herencia_plan.md"
+      - "5.4 Plantillas con bootstrap (flask-bootstrap)": "5_4_plant_boostrap.md"
+      - "5.5 Trabajando con formularios": "5_5_formularios.md"
+      - "5.6 Generando formularios con flask-wtf": "5_6_formularios_flask_wtf.md"
+      - "5.7. Subida de Ficheros": "5_7_subida_ficheros.md"
+
+  - "6. MODELO: GESTIONANDO LOS DATOS":
+      - "6.1 Usando base de datos en Flask, flask-sqlalchemy": "6_1_flask_sqlalchemy.md"
+      - "6.2 El modelo de base de datos": "6_2_modelos_BBDD.md"
+      - "6.3 Listando y filtrando los registros de la base de datos": "6_3_listando_filtrando.md"
+      - "6.4 Creando registros en la base de datos": "6_4_creando.md"
+      - "6.5 Modificando registros en la base de datos": "6_5_modificando.md"
+      - "6.6. Borrando un Registro": "6_6_borrando.md"
+
+  - "7. GESTIÓN DE USUARIOS":
+      - "7.1 Gestión de usuarios con sesiones": "7_1_gestion_usuarios.md"
+      - "7.2 Registrando nuevos usuarios": "7_2_nuevos_usuarios.md"
+      - "7.3 Gestión de permisos de usuarios": "7_3_gestion_permisos.md"
+      - "7.4. Gestión de Usuarios con Flask-login": "7_4_gestion_usu_flask_login.md"
+
+  - "8. GESTIÓN CARRITO DE LA COMPRA":
+      - "8.1 Uso de cookies para añadir artículos al carrito": "8_1_cookies_carrito.md"
+      - "8.2 Finalización de la compra": "8_2_finalizar_compra.md"
+
+  - "9. DESPLIEGUE DE LA APLICACIÓN":
+      - "9.1 Despliegue de aplicación flask en un servidor LAMP": "9_1_desplegar_lamp.md"
+      - "9.2 Despliegue de aplicación flask en hosting pythonanywhere": "9_2_desplegar_anywhere.md"
+      - "9.3 Despliegue de aplicación flask en un PaaS Heroku": "9_3_desplegar_heroku.md"
+      - "9.4 Despliegue de aplicación flask en un contenedor docker": "9_4_desplegar_docker.md"
+
+theme:
+  language: es
+  favicon: favicon.ico
+  name: null
+  custom_dir: 'windmill/mkdocs_windmill'
+  palette:
+    primary: deep blue
+    accent: deep orange
+
+  font:
+    text: Verdana
+    code: Roboto Mono
+    logo: favicon.ico
+  features:
+    - header.autohide
+    - navigation.expand
+
+extra:
+  search:
+    language: "es"
+    social:
+      icon: fontawesome/solid/envelope-square
+      link: mailto:<vivesjesus@gmail.com>
+  analytics:
+    provider: google
+    property: G-DSTGE6QTPP
+
+plugins:
+  - search
+  - git-revision-date
+
+markdown_extensions:
+  - attr_list
+  - pymdownx.critic
+  - admonition
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed
+  - pymdownx.details
+  - pymdownx.highlight:
+      linenums: true
+      linenums_style: pymdownx-inline
+  - pymdownx.superfences
+  - footnotes
+  - meta
+  - sane_lists
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.critic
+
+copyright: 2022-2023 Jesús Vives - Licencia CC BY-NC-SA

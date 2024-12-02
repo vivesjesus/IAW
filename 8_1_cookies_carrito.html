@@ -131,72 +131,110 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li>Ahora pueden pasar dos cosas: si el artículo ya existía en los datos de la cookie hay que actualizar el campo <code>cantidad</code> del diccionario, si el artículo no existe se añade un nuevo diccionario en la lista.</li>
 <li>Finalmente se crea una nueva cookie con la información actualizada.</li>
 </ul>
-<p>El código será el siguiente:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/carrito/add/&lt;id&gt;&#39;,methods=[&quot;get&quot;,&quot;post&quot;])
-<span class="linenos" data-linenos=" 2 "></span>@login_required
-<span class="linenos" data-linenos=" 3 "></span>def carrito_add(id):
-<span class="linenos" data-linenos=" 4 "></span>    art=Articulos.query.get(id) 
-<span class="linenos" data-linenos=" 5 "></span>    form=formCarrito()
-<span class="linenos" data-linenos=" 6 "></span>    form.id.data=id
-<span class="linenos" data-linenos=" 7 "></span>    if form.validate_on_submit():
-<span class="linenos" data-linenos=" 8 "></span>        if art.stock&gt;=int(form.cantidad.data):
-<span class="linenos" data-linenos=" 9 "></span>            try:
-<span class="linenos" data-linenos="10 "></span>                datos = json.loads(request.cookies.get(str(current_user.id)))
-<span class="linenos" data-linenos="11 "></span>            except:
-<span class="linenos" data-linenos="12 "></span>                datos = []
-<span class="linenos" data-linenos="13 "></span>            actualizar= False
-<span class="linenos" data-linenos="14 "></span>            for dato in datos:
-<span class="linenos" data-linenos="15 "></span>                if dato[&quot;id&quot;]==id:
-<span class="linenos" data-linenos="16 "></span>                    dato[&quot;cantidad&quot;]=form.cantidad.data
-<span class="linenos" data-linenos="17 "></span>                    actualizar = True
-<span class="linenos" data-linenos="18 "></span>            if not actualizar:
-<span class="linenos" data-linenos="19 "></span>                datos.append({&quot;id&quot;:form.id.data,&quot;cantidad&quot;:form.cantidad.data})
-<span class="linenos" data-linenos="20 "></span>            resp = make_response(redirect(url_for(&#39;inicio&#39;)))
-<span class="linenos" data-linenos="21 "></span>            resp.set_cookie(str(current_user.id),json.dumps(datos))
-<span class="linenos" data-linenos="22 "></span>            return resp
-<span class="linenos" data-linenos="23 "></span>        form.cantidad.errors.append(&quot;No hay artículos suficientes.&quot;)
-<span class="linenos" data-linenos="24 "></span>    return render_template(&quot;carrito_add.html&quot;,form=form,art=art)
-</code></pre></div>
+<p>El código será el siguiente:
+<strong>forms.py</strong>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>    class FormCarrito(FlaskForm):
+<span class="linenos" data-linenos=" 2 "></span>        id = HiddenField()
+<span class="linenos" data-linenos=" 3 "></span>        cantidad = IntegerField(&#39;Cantidad&#39;, default=1,
+<span class="linenos" data-linenos=" 4 "></span>                        validators=[NumberRange(min=1,
+<span class="linenos" data-linenos=" 5 "></span>                        message=&quot;Debe ser un numero positivo&quot;),
+<span class="linenos" data-linenos=" 6 "></span>                        DataRequired(&quot;Tienes que introducir el dato&quot;)])
+<span class="linenos" data-linenos=" 7 "></span>        submit = SubmitField(&#39;Aceptar&#39;)
+<span class="linenos" data-linenos=" 8 "></span>
+<span class="linenos" data-linenos=" 9 "></span>**carrito_add.html**
+<span class="linenos" data-linenos="10 "></span>    {% extends &quot;base.html&quot; %}
+<span class="linenos" data-linenos="11 "></span>    {% block title %}Tienda de Videojuegos{% endblock %}
+<span class="linenos" data-linenos="12 "></span>    {% block contenido %}
+<span class="linenos" data-linenos="13 "></span>    &lt;div class=&quot;container&quot;&gt;
+<span class="linenos" data-linenos="14 "></span>    &lt;div class=&quot;col-md-2&quot;&gt;&lt;/div&gt;
+<span class="linenos" data-linenos="15 "></span>    &lt;div class=&quot;col-md-6&quot;&gt;
+<span class="linenos" data-linenos="16 "></span>        &lt;h3&gt;Añadir al carrito&lt;/h3&gt;  
+<span class="linenos" data-linenos="17 "></span>        &lt;h2&gt;{{art.nombre}} ({{art.precio_final()}} €)&lt;/h2&gt;
+<span class="linenos" data-linenos="18 "></span>        {% for field, errors in form.errors.items() %}
+<span class="linenos" data-linenos="19 "></span>        &lt;div class=&quot;alert alert-danger&quot;&gt;
+<span class="linenos" data-linenos="20 "></span>            {{ form[field].label }}: {{ &#39;, &#39;.join(errors) }}
+<span class="linenos" data-linenos="21 "></span>        &lt;/div&gt;
+<span class="linenos" data-linenos="22 "></span>        {% endfor %}
+<span class="linenos" data-linenos="23 "></span>
+<span class="linenos" data-linenos="24 "></span>        &lt;form class=&quot;form-horizontal&quot;  method=&quot;post&quot;&gt;
+<span class="linenos" data-linenos="25 "></span>            &lt;div class=&quot;form-group&quot;&gt;
+<span class="linenos" data-linenos="26 "></span>            {{ form.csrf_token }}
+<span class="linenos" data-linenos="27 "></span>            {{form.id()}}&lt;br/&gt;
+<span class="linenos" data-linenos="28 "></span>            {{form.cantidad.label()}} {{form.cantidad(size=&quot;10&quot;, class=&quot;form-control&quot;)}}
+<span class="linenos" data-linenos="29 "></span>            &lt;br/&gt;
+<span class="linenos" data-linenos="30 "></span>            {{form.submit(class=&quot;btn btn-lg btn-primary btn-block&quot;)}}
+<span class="linenos" data-linenos="31 "></span>        &lt;/form&gt;
+<span class="linenos" data-linenos="32 "></span>        &lt;br/&gt;
+<span class="linenos" data-linenos="33 "></span>    &lt;/div&gt;
+<span class="linenos" data-linenos="34 "></span>    &lt;/div&gt;
+<span class="linenos" data-linenos="35 "></span>    {% endblock %}
+</code></pre></div></p>
+<p><strong>app.py</strong>
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>    @app.route(&#39;/carrito/add/&lt;id&gt;&#39;,methods=[&quot;get&quot;,&quot;post&quot;])
+<span class="linenos" data-linenos=" 2 "></span>    @login_required
+<span class="linenos" data-linenos=" 3 "></span>    def carrito_add(id):
+<span class="linenos" data-linenos=" 4 "></span>        art=Articulos.query.get(id) 
+<span class="linenos" data-linenos=" 5 "></span>        form=formCarrito()
+<span class="linenos" data-linenos=" 6 "></span>        form.id.data=id
+<span class="linenos" data-linenos=" 7 "></span>        if form.validate_on_submit():
+<span class="linenos" data-linenos=" 8 "></span>            if art.stock&gt;=int(form.cantidad.data):
+<span class="linenos" data-linenos=" 9 "></span>                try:
+<span class="linenos" data-linenos="10 "></span>                    datos = json.loads(request.cookies.get(str(current_user.id)))
+<span class="linenos" data-linenos="11 "></span>                except:
+<span class="linenos" data-linenos="12 "></span>                    datos = []
+<span class="linenos" data-linenos="13 "></span>                actualizar= False
+<span class="linenos" data-linenos="14 "></span>                for dato in datos:
+<span class="linenos" data-linenos="15 "></span>                    if dato[&quot;id&quot;]==id:
+<span class="linenos" data-linenos="16 "></span>                        dato[&quot;cantidad&quot;]=form.cantidad.data
+<span class="linenos" data-linenos="17 "></span>                        actualizar = True
+<span class="linenos" data-linenos="18 "></span>                if not actualizar:
+<span class="linenos" data-linenos="19 "></span>                    datos.append({&quot;id&quot;:form.id.data,&quot;cantidad&quot;:form.cantidad.data})
+<span class="linenos" data-linenos="20 "></span>                resp = make_response(redirect(url_for(&#39;inicio&#39;)))
+<span class="linenos" data-linenos="21 "></span>                resp.set_cookie(str(current_user.id),json.dumps(datos))
+<span class="linenos" data-linenos="22 "></span>                return resp
+<span class="linenos" data-linenos="23 "></span>            form.cantidad.errors.append(&quot;No hay artículos suficientes.&quot;)
+<span class="linenos" data-linenos="24 "></span>        return render_template(&quot;carrito_add.html&quot;,form=form,art=art)
+</code></pre></div></p>
 <h2 id="mostrar-los-articulos-del-carrito">Mostrar los artículos del carrito<a class="headerlink" href="#mostrar-los-articulos-del-carrito" title="Permanent link">&para;</a></h2>
 <p>Hemos creado una ruta <code>/carrito</code>, que nos muestra los artículos que hemos añadido al carrito. </p>
 <ul>
 <li>Vamos a leer los datos de la cookie.</li>
 <li>Recorremos los diccionarios de la lista, y vamos guardando cada objeto <code>Articulos</code> y la cantidad de cada uno de ellos que vamos a comprar.</li>
 <li>Vamos acumulando el precio total de la compra.</li>
-<li>Finalmente mandamos esta información a la plantilla <code>carrito.html</code> para que muestre la información.</li>
+<li>Finalmente mandamos esta información a la plantilla <code>carrito.html</code> para que muestre la información. Revisa el código del template <code>carrito.html</code></li>
 </ul>
-<p>El código será el siguiente:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/carrito&#39;)
-<span class="linenos" data-linenos=" 2 "></span>@login_required
-<span class="linenos" data-linenos=" 3 "></span>def carrito():
-<span class="linenos" data-linenos=" 4 "></span>    try:
-<span class="linenos" data-linenos=" 5 "></span>        datos = json.loads(request.cookies.get(str(current_user.id)))
-<span class="linenos" data-linenos=" 6 "></span>    except:
-<span class="linenos" data-linenos=" 7 "></span>        datos = []
-<span class="linenos" data-linenos=" 8 "></span>    articulos=[]
-<span class="linenos" data-linenos=" 9 "></span>    cantidades=[]
-<span class="linenos" data-linenos="10 "></span>    total=0
-<span class="linenos" data-linenos="11 "></span>    for articulo in datos:
-<span class="linenos" data-linenos="12 "></span>        articulos.append(Articulos.query.get(articulo[&quot;id&quot;]))
-<span class="linenos" data-linenos="13 "></span>        cantidades.append(articulo[&quot;cantidad&quot;])
-<span class="linenos" data-linenos="14 "></span>        total=total+Articulos.query.get(articulo[&quot;id&quot;]).precio_final()*articulo[&quot;cantidad&quot;]
-<span class="linenos" data-linenos="15 "></span>    articulos=zip(articulos,cantidades)
-<span class="linenos" data-linenos="16 "></span>    return render_template(&quot;carrito.html&quot;,articulos=articulos,total=total)
-</code></pre></div>
-<p>Por otro lado hemos creado una variable <code>num_articulos</code> en el contexto de las plantillas, para que podamos acceder al número de artículos que hay en el carrito desde las plantilla, para eso:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>@app.context_processor
-<span class="linenos" data-linenos="2 "></span>def contar_carrito():
-<span class="linenos" data-linenos="3 "></span>    if not current_user.is_authenticated:
-<span class="linenos" data-linenos="4 "></span>        return {&#39;num_articulos&#39;:0}
-<span class="linenos" data-linenos="5 "></span>    if request.cookies.get(str(current_user.id))==None:
-<span class="linenos" data-linenos="6 "></span>        return {&#39;num_articulos&#39;:0}
-<span class="linenos" data-linenos="7 "></span>    else:
-<span class="linenos" data-linenos="8 "></span>        datos = json.loads(request.cookies.get(str(current_user.id)))
-<span class="linenos" data-linenos="9 "></span>        return {&#39;num_articulos&#39;:len(datos)}
-</code></pre></div>
-<p>Y en la cabecera de la página, plantilla <code>base.html</code> hemos añadido un contado de artículos:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>&lt;a class=&quot;navbar-brand &quot; href=&quot;/carrito&quot;&gt; Carrito &lt;span class=&quot;badge&quot;&gt;{{num_articulos}} &lt;/span&gt;&lt;/a&gt;
-</code></pre></div>
+<p>El código será el siguiente:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>    @app.route(&#39;/carrito&#39;)
+<span class="linenos" data-linenos=" 2 "></span>    @login_required
+<span class="linenos" data-linenos=" 3 "></span>    def carrito():
+<span class="linenos" data-linenos=" 4 "></span>        try:
+<span class="linenos" data-linenos=" 5 "></span>            datos = json.loads(request.cookies.get(str(current_user.id)))
+<span class="linenos" data-linenos=" 6 "></span>        except:
+<span class="linenos" data-linenos=" 7 "></span>            datos = []
+<span class="linenos" data-linenos=" 8 "></span>        articulos=[]
+<span class="linenos" data-linenos=" 9 "></span>        cantidades=[]
+<span class="linenos" data-linenos="10 "></span>        total=0
+<span class="linenos" data-linenos="11 "></span>        for articulo in datos:
+<span class="linenos" data-linenos="12 "></span>            articulos.append(Articulos.query.get(articulo[&quot;id&quot;]))
+<span class="linenos" data-linenos="13 "></span>            cantidades.append(articulo[&quot;cantidad&quot;])
+<span class="linenos" data-linenos="14 "></span>            total=total+Articulos.query.get(articulo[&quot;id&quot;]).precio_final()*articulo[&quot;cantidad&quot;]
+<span class="linenos" data-linenos="15 "></span>        articulos=zip(articulos,cantidades)
+<span class="linenos" data-linenos="16 "></span>        return render_template(&quot;carrito.html&quot;,articulos=articulos,total=total)
+</code></pre></div></p>
+<p>Por otro lado hemos creado una variable <code>num_articulos</code> en el contexto de las plantillas, para que podamos acceder al número de artículos que hay en el carrito desde las plantilla, para eso:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>    @app.context_processor
+<span class="linenos" data-linenos="2 "></span>    def contar_carrito():
+<span class="linenos" data-linenos="3 "></span>        if not current_user.is_authenticated:
+<span class="linenos" data-linenos="4 "></span>            return {&#39;num_articulos&#39;:0}
+<span class="linenos" data-linenos="5 "></span>        if request.cookies.get(str(current_user.id))==None:
+<span class="linenos" data-linenos="6 "></span>            return {&#39;num_articulos&#39;:0}
+<span class="linenos" data-linenos="7 "></span>        else:
+<span class="linenos" data-linenos="8 "></span>            datos = json.loads(request.cookies.get(str(current_user.id)))
+<span class="linenos" data-linenos="9 "></span>            return {&#39;num_articulos&#39;:len(datos)}
+</code></pre></div></p>
+<p>Y en la cabecera de la página, plantilla <code>base.html</code> hemos añadido un contado de artículos:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>    &lt;a class=&quot;navbar-brand &quot; href=&quot;/carrito&quot;&gt; Carrito &lt;span class=&quot;badge&quot;&gt;{{num_articulos}} &lt;/span&gt;&lt;/a&gt;
+</code></pre></div></p>
 <h2 id="borrar-articulos-del-carrito">Borrar artículos del carrito<a class="headerlink" href="#borrar-articulos-del-carrito" title="Permanent link">&para;</a></h2>
 <p>Hemos añadido un enlace en la plantilla <code>carrito.html</code> que nos permite borrar un artículo del carrito. dicho enlace nos lleva a la ruta <code>/carrito_delete/&lt;id&gt;</code> que realizará las siguientes acciones:</p>
 <ul>
@@ -204,24 +242,24 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li>Para borrar el diccionario correspondiente al identificador que hemos recibido, vamos a crear otra lista sin dicho diccionario.</li>
 <li>Finalmente vamos a guardar en la cookie la nueva lista.</li>
 </ul>
-<p>El código será el siguiente:</p>
-<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&#39;/carrito_delete/&lt;id&gt;&#39;)
-<span class="linenos" data-linenos=" 2 "></span>@login_required
-<span class="linenos" data-linenos=" 3 "></span>def carrito_delete(id):
-<span class="linenos" data-linenos=" 4 "></span>    try:
-<span class="linenos" data-linenos=" 5 "></span>        datos = json.loads(request.cookies.get(str(current_user.id)))
-<span class="linenos" data-linenos=" 6 "></span>    except:
-<span class="linenos" data-linenos=" 7 "></span>        datos = []
-<span class="linenos" data-linenos=" 8 "></span>    new_datos=[]
-<span class="linenos" data-linenos=" 9 "></span>    for dato in datos:
-<span class="linenos" data-linenos="10 "></span>        if dato[&quot;id&quot;]!=id:
-<span class="linenos" data-linenos="11 "></span>            new_datos.append(dato)
-<span class="linenos" data-linenos="12 "></span>    resp = make_response(redirect(url_for(&#39;carrito&#39;)))
-<span class="linenos" data-linenos="13 "></span>    resp.set_cookie(str(current_user.id),json.dumps(new_datos))
-<span class="linenos" data-linenos="14 "></span>    return resp
-</code></pre></div>
+<p>El código será el siguiente:
+<div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>    @app.route(&#39;/carrito_delete/&lt;id&gt;&#39;)
+<span class="linenos" data-linenos=" 2 "></span>    @login_required
+<span class="linenos" data-linenos=" 3 "></span>    def carrito_delete(id):
+<span class="linenos" data-linenos=" 4 "></span>        try:
+<span class="linenos" data-linenos=" 5 "></span>            datos = json.loads(request.cookies.get(str(current_user.id)))
+<span class="linenos" data-linenos=" 6 "></span>        except:
+<span class="linenos" data-linenos=" 7 "></span>            datos = []
+<span class="linenos" data-linenos=" 8 "></span>        new_datos=[]
+<span class="linenos" data-linenos=" 9 "></span>        for dato in datos:
+<span class="linenos" data-linenos="10 "></span>            if dato[&quot;id&quot;]!=id:
+<span class="linenos" data-linenos="11 "></span>                new_datos.append(dato)
+<span class="linenos" data-linenos="12 "></span>        resp = make_response(redirect(url_for(&#39;carrito&#39;)))
+<span class="linenos" data-linenos="13 "></span>        resp.set_cookie(str(current_user.id),json.dumps(new_datos))
+<span class="linenos" data-linenos="14 "></span>        return resp
+</code></pre></div></p>
 <h2 id="codigo-ejemplo-de-esta-unidad">Código ejemplo de esta unidad<a class="headerlink" href="#codigo-ejemplo-de-esta-unidad" title="Permanent link">&para;</a></h2>
-<p><a href="../../ejemplos/u31">Código</a></p>
+<p><a href="zip/codigo_8_1.zip">Código</a></p>
 
   <br>
     

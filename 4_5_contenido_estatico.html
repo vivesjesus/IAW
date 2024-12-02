@@ -32,8 +32,8 @@
       var is_top_frame = false;
         
         var pageToc = [
-          {title: "Contenido est\u00e1tico", url: "#_top", children: [
-              {title: "Acceder al contenido est\u00e1tico", url: "#acceder-al-contenido-estatico" },
+          {title: "** Contenido est\u00e1tico**", url: "#_top", children: [
+              {title: "** Acceder al contenido est\u00e1tico **", url: "#acceder-al-contenido-estatico" },
               {title: "Mostrar una imagen", url: "#mostrar-una-imagen" },
           ]},
         ];
@@ -83,7 +83,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 
     
 
-    <h1 id="contenido-estatico"><strong> Contenido estático</strong><a class="headerlink" href="#contenido-estatico" title="Permanent link">&para;</a></h1>
+    <h1 id="contenido-estatico">** Contenido estático**<a class="headerlink" href="#contenido-estatico" title="Permanent link">&para;</a></h1>
 <p>Nuestra página web necesita tener contenido estático: hoja de estilo, ficheros java script, imágenes, documentos pdf, etc. Para acceder a eelos vamos a utilizar la función url_for.</p>
 <p>¿Dónde guardamos el contenido estático?Permalink
 Dentro de nuestro directorio aplicacion vamos a crear un directorio llamado static, donde podemos crear la estructura de directorios adecuada para guardas nuestro contenido estático. Por ejemplo para guardar el CSS, el java script y las imágenes podríamos crear una estrucutra como la siguiente:
@@ -93,7 +93,7 @@ Dentro de nuestro directorio aplicacion vamos a crear un directorio llamado stat
 <span class="linenos" data-linenos="4 "></span>        js
 <span class="linenos" data-linenos="5 "></span>        img
 </code></pre></div></p>
-<h2 id="acceder-al-contenido-estatico"><strong> Acceder al contenido estático </strong><a class="headerlink" href="#acceder-al-contenido-estatico" title="Permanent link">&para;</a></h2>
+<h2 id="acceder-al-contenido-estatico">** Acceder al contenido estático **<a class="headerlink" href="#acceder-al-contenido-estatico" title="Permanent link">&para;</a></h2>
 <hr />
 <p>Por ejemplo:
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos="1 "></span>url_for(&#39;static&#39;, filename=&#39;css/style.css&#39;)

@@ -117,7 +117,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <span class="linenos" data-linenos="20 "></span>{% endblock %}
 </code></pre></div>
 Mandamos tres datos: num1, num2 y operador a la misma ruta /calculadora_post pero en esta ocasión se utiliza el método POST, en este caso se lee los datos del formulario, se calcula la operación y se muestra una plantilla con el resultado:</p>
-<h5 id="anadir-a-apppy"><strong>Añadir a app.py </strong><a class="headerlink" href="#anadir-a-apppy" title="Permanent link">&para;</a></h5>
+<h5 id="anadir-a-apppy">**Añadir a app.py **<a class="headerlink" href="#anadir-a-apppy" title="Permanent link">&para;</a></h5>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>@app.route(&quot;/calculadora_post&quot;, methods=[&quot;get&quot;,&quot;post&quot;])
 <span class="linenos" data-linenos=" 2 "></span>def calculadora_post():
 <span class="linenos" data-linenos=" 3 "></span>    if request.method==&quot;POST&quot;:
