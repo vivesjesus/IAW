@@ -63,12 +63,12 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
   <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
     
     <div class="wm-article-nav pull-right">
-      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-default pull-right">
+      <a href="7_2_nuevos_usuarios.html" class="btn btn-xs btn-default pull-right">
         Next
         <i class="fa fa-chevron-right" aria-hidden="true"></i>
       </a>
-      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-link">
-        7.3 Gestión de permisos de usuarios
+      <a href="7_2_nuevos_usuarios.html" class="btn btn-xs btn-link">
+        7.2 Registrando nuevos usuarios
       </a>
     </div>
     
@@ -118,7 +118,7 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
 <li>Tenemos una propiedad <code>password</code>. Al intentar obtener su valor, nos devuelve una excepción indicado que no se puede leer, si intentamos modificarla, lo que realmente se hace es cifrarla en el atributo <code>password_hash</code> con la función <code>generate_password_hash</code> del módulo <code>werkzeug.security</code>.</li>
 <li>También tenemos un método <code>verify_password</code> que utilizando la función <code>check_password_hash</code> del módulo <code>werkzeug.security</code>, nos permite verificar si la contraseña guarda es igual a la indicada como parámetro.</li>
 </ul>
-<p>Tenemos que volver a generar las tablas para tener a nuestra disposición el nuevo modelo. Una vez realizada esta operación añadimos datos a nuestro inicializar: <code>inicializacion_datos.py</code>, así podemos añadir usaurios de prueba</p>
+<p>Tenemos que volver a generar las tablas para tener a nuestra disposición el nuevo modelo. Una vez realizada esta operación añadimos datos a nuestro inicializar: <code>inicializacion_datos.py</code>, así podemos añadir usuarios de prueba</p>
 <div class="highlight"><pre><span></span><code><span class="linenos" data-linenos=" 1 "></span>usuarios = [
 <span class="linenos" data-linenos=" 2 "></span>    {&quot;username&quot;: &quot;Luis&quot;, &quot;password_hash&quot;:generate_password_hash( &quot;1234&quot;), &quot;nombre&quot;:
 <span class="linenos" data-linenos=" 3 "></span>     &quot;Luis Martín Basket &quot;, &quot;email&quot;: &quot;l@gmail.com&quot;,
@@ -243,12 +243,12 @@ if (is_top_frame) { $('body').addClass('wm-top-page'); }
   <div class="row wm-article-nav-buttons" role="navigation" aria-label="navigation">
     
     <div class="wm-article-nav pull-right">
-      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-default pull-right">
+      <a href="7_2_nuevos_usuarios.html" class="btn btn-xs btn-default pull-right">
         Next
         <i class="fa fa-chevron-right" aria-hidden="true"></i>
       </a>
-      <a href="7_3_gestion_permisos.html" class="btn btn-xs btn-link">
-        7.3 Gestión de permisos de usuarios
+      <a href="7_2_nuevos_usuarios.html" class="btn btn-xs btn-link">
+        7.2 Registrando nuevos usuarios
       </a>
     </div>
     
